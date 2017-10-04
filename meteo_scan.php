@@ -27,7 +27,6 @@ ob_start(null, 2);
 scan_meteo('Lille');
 
 $conditionsMeteo = new conditions_meteo();
-
 // ========================================
 // ========================================
 // génére l'url de la page La chaine météo en fonction de la ville demandé
@@ -66,10 +65,11 @@ function scan_meteo($ville) {
     echo ("Ville inconnue\n");
   }
 }
-
 // ------------------------
 
-function scrap_meteo ($url) {
+function scrap_meteo($url) {
+
+  global $blockPrevisionJourHtml;
 
   $html = file_get_html($url);
 
@@ -82,11 +82,39 @@ function scrap_meteo ($url) {
   $jour = $blockJourPrevision->find('div')[1]->plaintext;
   $mois = $blockJourPrevision->find('div')[2]->plaintext;
 
-  //echo("jour: ".$jour."  - mois: ".$mois);
+  echo("jour: " . $jour . "  - mois: " . $mois . " \n");
 
-  $blockPrevisQuartJour[0] = $blockPrevisionJourHtml->find('div[id=previs_quart_jour_0]')[0];
-  $blockPrevisQuartJour[1] = $blockPrevisionJourHtml->find('div[id=previs_quart_jour_1]')[0];
-  $blockPrevisQuartJour[2] = $blockPrevisionJourHtml->find('div[id=previs_quart_jour_2]')[0];
+  // cible les blocs des prévision 'quart jour'
+  for ($index = 0; $index < 3; $index++) {
 
+    $blockPrevisQuartJour   = scrapBlockPrevisQuartJour($index);
+    $nomQuartJour[$index]   = scrapNomQuartJour($blockPrevisQuartJour);
 
+  }
 }
+
+// ------------------------
+// récupère le nom des prévision 'quart jour'
+
+function scrapNomQuartJour($blockHtml) {
+
+  $nomQuartJour = $blockHtml->find('div[class=nom_quart_jour]')[0]->plaintext;
+
+  echo "quart jour: ". $nomQuartJour . "\n";
+
+  return $nomQuartJour;
+}
+// ------------------------
+
+function scrapBlockPrevisQuartJour ($index) {
+
+    global $blockPrevisionJourHtml;
+
+    $blockPrevisQuartJour = $blockPrevisionJourHtml
+            ->find('div[id=previs_quart_jour_' . $index . ']')[0];
+
+    return $blockPrevisQuartJour;
+}
+// ------------------------
+
+

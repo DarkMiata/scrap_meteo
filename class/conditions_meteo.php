@@ -13,8 +13,6 @@
  */
 class conditions_meteo
   {
-
-  private $codeVille;
   private $date;
   private $heure;
   private $temperature;
@@ -23,9 +21,6 @@ class conditions_meteo
   private $ventDirection;
 
   // ------------------------
-  function getCodeVille() {
-    return $this->codeVille;
-  }
    function getDate() {
     return $this->date;
   }
@@ -45,9 +40,6 @@ class conditions_meteo
     return $this->ventDirection;
   }
   // ------------------------
-   function setCodeVille($codeVille) {
-    $this->codeVille = $codeVille;
-  }
    function setDate($date) {
     $this->date = $date;
   }
